@@ -118,7 +118,7 @@ def draw_face_bb(image, box_color=(0, 255, 0), box_thickness=3, return_type="pil
     else:
         return image
 
-def draw_face_landmarks(image, landmark_color=(0, 255, 0), landmark_thickness=-1, return_type="pil"):
+def draw_face_landmarks(image, landmark_color=(0, 255, 0), landmark_thickness=1, return_type="pil"):
     """
     Given an image, draws facial landmarks
 
@@ -138,33 +138,48 @@ def draw_face_landmarks(image, landmark_color=(0, 255, 0), landmark_thickness=-1
     for face in face_landmarks:
         for feature, landmarks in face.items():
             for landmark in landmarks:
-                cv2.circle(image, landmark, 1, landmark_color, landmark_thickness)
+                cv2.circle(image, landmark, landmark_thickness, landmark_color, -1)
 
     if return_type == "pil":
         return Image.fromarray(image)
     else:
         return image
 
-# img = Image.open("./face-recognition-daisi/group2.jpg")
-# img2 = np.asarray(img)
-
-# final = draw_face_landmarks(img)
-# final.show()
-
 ################################## UI ##############################################
 
 if __name__ == "__main__":
     st.title("Face Recognition")
-    st.write("This Daisi allows you to provide an image, and detect and recognize faces, extract facial landmarks, draw bounding boxes and much more! Upload an image with a face to get started!")
+    st.write(
+    """
+    This daisy allows you to perform face-recognition operations on an image. 
+    1) Face detection
+    2) Facial landmark detection
+    3) Face recognition
+    4) Face encoding extraction
+    """)
 
     image_upload = st.sidebar.file_uploader("Load your image here")
     if image_upload is not None:
         image = Image.open(image_upload)
-        st.header("Image")
-        st.image(image)
-        with st.spinner("Colorizing your image"):
-            result = draw_face_bb(image)
-        st.header("Image with bounding boxes")
-        st.image(result, caption='Faces detected')
 
+        col1, col2, col3, col4 = st.columns([1,1,1,1])
 
+        with col1:
+            draw_bb_button = st.button('Detect Faces')
+        with col2:
+            draw_landmark_button = st.button('Draw Landmarks')
+
+        if draw_bb_button:
+            with st.spinner("Detecting faces..."):
+                result = draw_face_bb(image)
+            st.header("Image with detected faces")
+            st.image(result)
+            
+        elif draw_landmark_button:
+            with st.spinner("Detecting landmarks..."):
+                result = draw_face_landmarks(image, landmark_thickness=2)
+            st.header("Image with facial landmarks")
+            st.image(result)
+        else:
+            st.header("Original Image")
+            st.image(image)
