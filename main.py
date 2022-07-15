@@ -72,7 +72,7 @@ def compare_faces(face_encodings, face_encoding_to_check, tolerance=0.6):
     Parameters:
         face_encodings: A list of known face encodings
         face_encoding_to_check: A single face encoding to compare against the list
-        tolerance: How much distance between faces to consider it a match. Lower is more strict. 0.6 is typical best performance.
+        tolerance (optional): How much distance between faces to consider it a match. Lower is more strict. 0.6 is typical best performance.
         
     Returns:
         A list of True/False values indicating which known_face_encodings match the face encoding to check
