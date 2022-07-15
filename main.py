@@ -160,12 +160,11 @@ if __name__ == "__main__":
     image_upload = st.sidebar.file_uploader("Load your image here")
     if image_upload is not None:
         image = Image.open(image_upload)
-    else:
-        image = None
-        
-    st.header("Image")
-    st.image(image)
-    with st.spinner("Colorizing your image"):
-        result = draw_face_bb(image)
-    st.header("Image with bounding boxes")
-    st.image(result, caption='Faces detected')
+        st.header("Image")
+        st.image(image)
+        with st.spinner("Colorizing your image"):
+            result = draw_face_bb(image)
+        st.header("Image with bounding boxes")
+        st.image(result, caption='Faces detected')
+
+
