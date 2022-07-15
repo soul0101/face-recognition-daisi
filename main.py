@@ -1,4 +1,3 @@
-from ast import expr_context
 import cv2
 import numpy as np
 from PIL import Image
@@ -146,44 +145,27 @@ def draw_face_landmarks(image, landmark_color=(0, 255, 0), landmark_thickness=-1
     else:
         return image
 
-img = Image.open("./face-recognition-daisi/group2.jpg")
-img2 = np.asarray(img)
+# img = Image.open("./face-recognition-daisi/group2.jpg")
+# img2 = np.asarray(img)
 
-final = draw_face_landmarks(img)
-final.show()
+# final = draw_face_landmarks(img)
+# final.show()
 
 ################################## UI ##############################################
 
 if __name__ == "__main__":
     st.title("Face Recognition")
     st.write("This Daisi allows you to provide an image, and detect and recognize faces, extract facial landmarks, draw bounding boxes and much more! Upload an image with a face to get started!")
-    
-    with st.sidebar:
-        uploaded_file = st.file_uploader("Choose an Image", type=["png","jpg","jpeg"])
 
-    file_name = uploaded_file.name
+    image_upload = st.sidebar.file_uploader("Load your image here")
+    if image_upload is not None:
+        image = Image.open(image_upload)
+    else:
+        image = None
         
-    prefix = "yolo_result, label_result"
-    suffix = """
-        yolo_result.show()
-        label_result
-    """
-
-    with st.expander("Inference with PyDaisi", expanded=True):
-        st.markdown(f"""
-        ```python
-        import pydaisi as pyd
-        from PIL import Image
-
-        face_recognition = pyd.Daisi("soul0101/ Face Recognition")
-
-        img = Image.open("{file_name}")
-
-        {prefix} = face_recognition.get_face_landmarks(img).value
-        
-        {suffix}
-        ```
-        """)
-
-    final_result = draw_face_bb(Image.open(file_name))
-    st.image(final_result, caption='Faces detected')
+    st.header("Image")
+    st.image(image)
+    with st.spinner("Colorizing your image"):
+        result = draw_face_bb(image)
+    st.header("Image with bounding boxes")
+    st.image(result, caption='Faces detected')
