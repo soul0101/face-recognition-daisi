@@ -163,48 +163,21 @@ def draw_face_landmarks(image, face_locations=None, model='large', landmark_colo
 ################################## UI ##############################################
 
 if __name__ == "__main__":
-    st.title("Face Recognition")
-    st.write(
-    """
-    This daisy allows you to perform face-recognition operations on an image. 
-    1) Face detection
-    2) Facial landmark detection
-    3) Face recognition
-    4) Face encoding extraction
-    """)
+    import streamlit as st
 
-    image_upload = st.sidebar.file_uploader("Load your image here")
+    st.set_page_config(
+        page_title="Hello",
+        page_icon="👋",
+    )
 
-    if image_upload is not None:
-        image = Image.open(image_upload)
-    else:
-        image = Image.open("example.jpg")
-        
-    col1, col2, col3, col4 = st.columns([1,1,1,1])
+    st.write("# Welcome to Face Recognition Daisi! 👋")
 
-    with col1:
-        draw_bb_button = st.button('Detect Faces')
-    with col2:
-        draw_landmark_button = st.button('Draw Landmarks')
-
-    if draw_bb_button:
-        with st.spinner("Detecting faces..."):
-            result = draw_face_bb(image)
-        if not result:
-            with st.spinner("Failed to find faces, trying harder..."):
-                result = draw_face_bb(image, number_of_times_to_upsample=3)
-        if not result:
-            st.header("No faces found")
-            st.image(image)
-        else:
-            st.header("Image with detected faces")
-            st.image(result)
-        
-    elif draw_landmark_button:
-        with st.spinner("Detecting landmarks..."):
-            result = draw_face_landmarks(image, landmark_thickness=2)
-        st.header("Image with facial landmarks")
-        st.image(result)
-    else:
-        st.header("Original Image")
-        st.image(image)
+    st.markdown(
+        """
+            This daisi allows you to perform face-recognition operations on an image. 
+            1) Face detection
+            2) Facial landmark detection
+            3) Face recognition
+            4) Face encoding extraction
+        """
+    )
