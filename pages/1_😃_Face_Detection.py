@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 from main import * 
 
-st.set_page_config(page_title="Face Detection", page_icon="😃")
+# st.set_page_config(page_title="Face Detection", page_icon="😃")
 
 st.sidebar.header("Upload Image")
 

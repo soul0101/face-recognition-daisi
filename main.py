@@ -165,8 +165,9 @@ def draw_face_landmarks(image, face_locations=None, model='large', landmark_colo
 if __name__ == "__main__":
     st.sidebar.title('Sidebar')
     st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
+        page_title="Face Recognition",
+        page_icon="🧊",
+        initial_sidebar_state="expanded",
     )
 
     st.write("# Welcome to Face Recognition Daisi! 👋")
