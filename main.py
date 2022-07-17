@@ -163,8 +163,7 @@ def draw_face_landmarks(image, face_locations=None, model='large', landmark_colo
 ################################## UI ##############################################
 
 if __name__ == "__main__":
-    import streamlit as st
-
+    st.sidebar.title('Sidebar')
     st.set_page_config(
         page_title="Hello",
         page_icon="👋",
