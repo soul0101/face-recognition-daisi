@@ -22,7 +22,7 @@ def process_image(image: Image.Image or np.ndarray) -> np.ndarray:
 
     return np.asarray(image)
 
-
+@st.cache(suppress_st_warning=True)
 def get_face_locations(image, number_of_times_to_upsample=1, model='hog'):
     """
     Returns an array of bounding boxes of human faces in a image
@@ -42,6 +42,7 @@ def get_face_locations(image, number_of_times_to_upsample=1, model='hog'):
     image = process_image(image)
     return face_recognition.face_locations(image, number_of_times_to_upsample=number_of_times_to_upsample, model=model)
 
+@st.cache(suppress_st_warning=True)
 def get_face_encodings(image, known_face_locations=None, num_jitters=1, model='small'):
     """
     Given an image, return the 128-dimension face encoding for each face in the image.
@@ -61,6 +62,7 @@ def get_face_encodings(image, known_face_locations=None, num_jitters=1, model='s
     image = process_image(image)
     return face_recognition.face_encodings(image, known_face_locations=known_face_locations, num_jitters=num_jitters, model=model)
 
+@st.cache(suppress_st_warning=True)
 def get_face_landmarks(image, face_locations=None, model='large'):
     """
     Given an image, returns a dict of face feature locations (eyes, nose, etc) for each face in the image
@@ -75,6 +77,7 @@ def get_face_landmarks(image, face_locations=None, model='large'):
     image = process_image(image)
     return face_recognition.face_landmarks(image, face_locations=face_locations, model=model)
 
+@st.cache(suppress_st_warning=True)
 def compare_faces(face_encodings, face_encoding_to_check, tolerance=0.6):
     """
     Compare a list of face encodings against a candidate encoding to see if they match.
@@ -89,6 +92,7 @@ def compare_faces(face_encodings, face_encoding_to_check, tolerance=0.6):
     """
     return face_recognition.compare_faces(face_encodings, face_encoding_to_check, tolerance=tolerance)
 
+@st.cache(suppress_st_warning=True)
 def similiarity_faces(face_encodings, face_encoding_to_check):
     """
     Given a list of face encodings, compare them to a known face encoding and get a euclidean distance for each comparison face. 
@@ -175,105 +179,104 @@ def intro():
         """
     )
 
-# def face_detection_page():
+def face_detection_page():
 
-#     st.sidebar.header("Upload Image")
+    st.sidebar.header("Upload Image")
 
-#     st.title("Face Detection")
-#     st.markdown(
-#         """
-#         1) Detect faces in an image
-#         2) Draw facial landmarks
-#         """
-#     )
+    st.title("Face Detection")
+    st.markdown(
+        """
+        1) Detect faces in an image
+        2) Draw facial landmarks
+        """
+    )
 
-#     image_upload = st.sidebar.file_uploader("Load your image here")
+    image_upload = st.sidebar.file_uploader("Load your image here")
 
-#     if image_upload is not None:
-#         image = Image.open(image_upload)
-#     else:
-#         image = Image.open("./resources/example.jpg")
+    if image_upload is not None:
+        image = Image.open(image_upload)
+    else:
+        image = Image.open("./resources/example.jpg")
         
-#     col1, col2, col3, col4 = st.columns([1,1,1,1])
+    col1, col2, col3, col4 = st.columns([1,1,1,1])
 
-#     with col1:
-#         draw_bb_button = st.button('Detect Faces')
-#     with col2:
-#         draw_landmark_button = st.button('Draw Landmarks')
+    with col1:
+        draw_bb_button = st.button('Detect Faces')
+    with col2:
+        draw_landmark_button = st.button('Draw Landmarks')
 
-#     if draw_bb_button:
-#         with st.spinner("Detecting faces..."):
-#             result = draw_face_bb(image)
-#         if not result:
-#             with st.spinner("Failed to find faces, trying harder..."):
-#                 result = draw_face_bb(image, number_of_times_to_upsample=3)
-#         if not result:
-#             st.header("No faces found")
-#             st.image(image)
-#         else:
-#             st.header("Image with detected faces")
-#             st.image(result)
+    if draw_bb_button:
+        with st.spinner("Detecting faces..."):
+            result = draw_face_bb(image)
+        if not result:
+            with st.spinner("Failed to find faces, trying harder..."):
+                result = draw_face_bb(image, number_of_times_to_upsample=3)
+        if not result:
+            st.header("No faces found")
+            st.image(image)
+        else:
+            st.header("Image with detected faces")
+            st.image(result)
         
-#     elif draw_landmark_button:
-#         with st.spinner("Detecting landmarks..."):
-#             result = draw_face_landmarks(image, landmark_thickness=2)
-#         st.header("Image with facial landmarks")
-#         st.image(result)
-#     else:
-#         st.header("Original Image")
-#         st.image(image)
+    elif draw_landmark_button:
+        with st.spinner("Detecting landmarks..."):
+            result = draw_face_landmarks(image, landmark_thickness=2)
+        st.header("Image with facial landmarks")
+        st.image(result)
+    else:
+        st.header("Original Image")
+        st.image(image)
 
-# def face_recognition_page():
+def face_recognition_page():
 
-#     st.sidebar.header("Upload Image")
-#     st.title("Face Recognition")
+    st.sidebar.header("Upload Image")
+    st.title("Face Recognition")
 
-#     col1, col2= st.columns([1,1])
+    col1, col2= st.columns([1,1])
 
-#     with col1:
-#         st.markdown("## Reference")
-#         reference_face_upload = st.file_uploader("Upload an image with a face for reference")
-#         if reference_face_upload is not None:
-#             reference_face_image = Image.open(reference_face_upload)
-#         else:
-#             reference_face_image = Image.open("./resources/sample_reference_face.jpg")
-#         st.image(reference_face_image)
+    with col1:
+        st.markdown("## Reference")
+        reference_face_upload = st.file_uploader("Upload an image with a face for reference")
+        if reference_face_upload is not None:
+            reference_face_image = Image.open(reference_face_upload)
+        else:
+            reference_face_image = Image.open("./resources/sample_reference_face.jpg")
+        st.image(reference_face_image)
 
-#     with col2:
-#         st.markdown("## Authenticate")
-#         check_face_upload = st.file_uploader("Upload image with face to authenticate")
-#         if check_face_upload is not None:
-#             check_face_image = Image.open(check_face_upload)
-#         else:
-#             check_face_image = Image.open("./resources/sample_check_face.jpg")
-#         st.image(check_face_image)
+    with col2:
+        st.markdown("## Authenticate")
+        check_face_upload = st.file_uploader("Upload image with face to authenticate")
+        if check_face_upload is not None:
+            check_face_image = Image.open(check_face_upload)
+        else:
+            check_face_image = Image.open("./resources/sample_check_face.jpg")
+        st.image(check_face_image)
 
-#     reference_encodings = get_face_encodings(reference_face_image)
-#     check_encodings = get_face_encodings(check_face_image)
+    reference_encodings = get_face_encodings(reference_face_image)
+    check_encodings = get_face_encodings(check_face_image)
 
-#     if len(reference_encodings) == 0:
-#         st.write("No faces found!")
-#     elif len(reference_encodings) > 1:
-#         st.write("Please upload a reference image with only one face!")
-#     elif len(check_encodings) == 0:
-#         st.write("No faces found!")
-#     else:
-#         authenticate_btn = st.button("Authenticate")
-#         if authenticate_btn:
-#             with st.spinner("Authenticating faces..."):
-#                 result = compare_faces(check_encodings, reference_encodings[0])
-#             if True in result:
-#                 st.write("Authentication Succesful!")
-#             else:
-#                 st.write("Authentication Failed!")
+    if len(reference_encodings) == 0:
+        st.write("No faces found!")
+    elif len(reference_encodings) > 1:
+        st.write("Please upload a reference image with only one face!")
+    elif len(check_encodings) == 0:
+        st.write("No faces found!")
+    else:
+        authenticate_btn = st.button("Authenticate")
+        if authenticate_btn:
+            with st.spinner("Authenticating faces..."):
+                result = compare_faces(check_encodings, reference_encodings[0])
+            if True in result:
+                st.write("Authentication Succesful!")
+            else:
+                st.write("Authentication Failed!")
 
 if __name__ == "__main__":
-    # page_names_to_funcs = {
-    #     "Introduction": intro,
-    #     "Face Detection": face_detection_page,
-    #     "Face Recognition": face_recognition_page
-    # }
+    page_names_to_funcs = {
+        "Introduction": intro,
+        "Face Detection": face_detection_page,
+        "Face Recognition": face_recognition_page
+    }
 
-    # demo_name = st.sidebar.selectbox("Choose a demo", page_names_to_funcs.keys())
-    # page_names_to_funcs[demo_name]()
-    intro()
+    demo_name = st.sidebar.selectbox("Choose a demo", page_names_to_funcs.keys())
+    page_names_to_funcs[demo_name]()
