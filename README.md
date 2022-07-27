@@ -1,4 +1,4 @@
-# face-recognition-daisi
+# Face Recognition Daisi
 This Daisi brings all the essential face recognition features in a simple and reusable format. <br>
 Since the python library 'face_recognition' depends on dlib which is written in C++, it can be tricky to deploy an app using it to a cloud hosting providers like Heroku or AWS.
 The daisi solves the above problem and provides rich features such as: <br>
