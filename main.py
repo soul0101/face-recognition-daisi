@@ -229,7 +229,6 @@ def face_detection_page():
 
 def face_recognition_page():
 
-    st.sidebar.header("Upload Image")
     st.title("Face Recognition")
 
     col1, col2= st.columns([1,1])
@@ -272,11 +271,4 @@ def face_recognition_page():
                 st.write("Authentication Failed!")
 
 if __name__ == "__main__":
-    page_names_to_funcs = {
-        "Introduction": intro,
-        "Face Detection": face_detection_page,
-        "Face Recognition": face_recognition_page
-    }
-
-    demo_name = st.sidebar.selectbox("Choose a demo", page_names_to_funcs.keys())
-    page_names_to_funcs[demo_name]()
+    intro()
