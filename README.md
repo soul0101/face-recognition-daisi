@@ -8,3 +8,4 @@ The daisi solves the above problem and provides rich features such as: <br>
 3) Extract 128-dimensional face encodings from an image
 4) Detect if given face encoding exists in the image (Facial recognition)
 5) Face similarity index
+6) Face Authentication and Recognition
